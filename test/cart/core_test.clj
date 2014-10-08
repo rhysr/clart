@@ -3,8 +3,15 @@
             [cart.core :refer :all]))
 
 
-(deftest counting-cart-items
+(deftest creating-cart
+  (def cart (cart-factory))
+  (testing "new cart has"
+    (is (true? (contains? cart :items)))
+    (is (true? (empty? (cart :items))))
+    ))
+
+(deftest counting-cart-lines
+  (def cart (cart-factory))
   (testing "empty"
     (testing "has zero items"
-      (is (= 0 0)))))
-
+      (is (= 0 (cart-line-count cart))))))
