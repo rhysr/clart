@@ -8,7 +8,7 @@
 
 
 
-(defn cart-factory []
+(defn create-cart []
   {:items {}}
   )
 

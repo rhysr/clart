@@ -4,21 +4,21 @@
 
 
 (deftest creating-cart
-  (def cart (cart-factory))
+  (def cart (create-cart))
   (testing "new cart has"
     (is (true? (contains? cart :items)))
     (is (true? (empty? (cart :items))))
     ))
 
 (deftest counting-cart-lines
-  (def cart (cart-factory))
+  (def cart (create-cart))
   (testing "empty"
     (testing "has zero items"
       (is (= 0 (cart-line-count cart))))))
 
 
 (deftest add-items-to-cart
-  (def cart (cart-factory))
+  (def cart (create-cart))
   (testing "add item to empty cart"
     (let
       [item {:productId 12345 :quantity 1}
@@ -43,12 +43,11 @@
   (testing "add same item to cart increments quantity"
     (let
       [item {:productId 12345 :quantity 1}
-       cart (cart-item-add (cart-item-add (cart-factory) item) item)]
+       cart (cart-item-add (cart-item-add (create-cart) item) item)]
       (is (= 1 (cart-line-count cart)))
       (is (true? (contains? cart :items)))
       (let [items (cart :items)]
         (is (true? (contains? items 12345)))
         (let [new-item (items 12345)]
           (is (true? (contains? new-item :quantity)))
-          (is (= 2 (new-item :quantity)))
-          )))))
+          (is (= 2 (new-item :quantity))))))))
