@@ -40,14 +40,15 @@
       (is (true? (contains? items 23)))
     ))
 
-  (testing "add same item to cart increments quantity"
+  (testing "add same product to cart sums quantity"
     (let
-      [item {:productId 12345 :quantity 1}
-       cart (cart-item-add (cart-item-add (create-cart) item) item)]
+      [item-1 {:productId 12345 :quantity 1}
+       item-2 {:productId 12345 :quantity 3}
+       cart (cart-item-add (cart-item-add (create-cart) item-1) item-2)]
       (is (= 1 (cart-line-count cart)))
       (is (true? (contains? cart :items)))
       (let [items (cart :items)]
         (is (true? (contains? items 12345)))
-        (let [new-item (items 12345)]
-          (is (true? (contains? new-item :quantity)))
-          (is (= 2 (new-item :quantity))))))))
+        (let [line-item (items 12345)]
+          (is (true? (contains? line-item :quantity)))
+          (is (= 4 (line-item :quantity))))))))
