@@ -21,7 +21,7 @@
   (def cart (create-cart))
   (testing "add item to empty cart"
     (let
-      [item {:productId 12345 :quantity 1}
+      [item {:product-id 12345 :quantity 1}
        populated-cart (cart-item-add cart item)]
       (is (true? (contains? populated-cart :items)))
       (is (= 1 (cart-line-count populated-cart)))
@@ -32,8 +32,8 @@
 
   (testing "add different items to cart"
     (let
-      [one-item-cart (cart-item-add cart {:productId 12345 :quantity 1})
-       cart (cart-item-add one-item-cart {:productId 23 :quantity 1})
+      [one-item-cart (cart-item-add cart {:product-id 12345 :quantity 1})
+       cart (cart-item-add one-item-cart {:product-id 23 :quantity 1})
        items (cart :items)]
       (is (= 2 (cart-line-count cart)))
       (is (true? (contains? items 12345)))
@@ -42,8 +42,8 @@
 
   (testing "add same product to cart sums quantity"
     (let
-      [item-1 {:productId 12345 :quantity 1}
-       item-2 {:productId 12345 :quantity 3}
+      [item-1 {:product-id 12345 :quantity 1}
+       item-2 {:product-id 12345 :quantity 3}
        cart (cart-item-add (cart-item-add (create-cart) item-1) item-2)]
       (is (= 1 (cart-line-count cart)))
       (is (true? (contains? cart :items)))
@@ -54,6 +54,26 @@
           (is (= 4 (line-item :quantity))))))))
 
 (deftest cart-validation
-  (testing "requires :items map"
     (is (false? (valid-cart? {})))
-    (is (true? (valid-cart? (create-cart))))))
+    (is (true? (valid-cart? (create-cart)))))
+
+(deftest line-item-validation
+  (is (false? (valid-line-item? {})))
+  (is (false? (valid-line-item? {:product-id 12345})))
+  (is (false? (valid-line-item? {:product-id -1})))
+  (is (false? (valid-line-item? {:product-id -1 :quantity 2})))
+  (is (false? (valid-line-item? {:product-id 12345 :quantity -2})))
+  (is (true? (valid-line-item? {:product-id 12345 :quantity 2}))))
+
+
+(deftest product-id-validation
+  (is (false? (valid-product-id? -1)))
+  (is (false? (valid-product-id? 0)))
+  (is (false? (valid-product-id? "number")))
+  (is (true? (valid-product-id? 12345))))
+
+(deftest quantity-validation
+  (is (false? (valid-quantity? -1)))
+  (is (false? (valid-quantity? 0)))
+  (is (false? (valid-quantity? "number")))
+  (is (true? (valid-quantity? 12345))))
