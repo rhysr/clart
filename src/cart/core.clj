@@ -15,3 +15,9 @@
 
 (defn cart-line-count [cart]
   (count (cart :items)))
+
+
+(defn cart-item-add [cart item]
+  (update-in cart [:items]
+    (fn [items]
+      (assoc items (item :productId) item))))
