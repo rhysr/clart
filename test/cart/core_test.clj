@@ -28,4 +28,14 @@
       (let
         [items (populated-cart :items)]
         (is (true? (contains? items 12345)))
-        (is (= 1 ((items 12345) :quantity)))))))
+        (is (= 1 ((items 12345) :quantity))))))
+
+  (testing "add different items to cart"
+    (let
+      [one-item-cart (cart-item-add cart {:productId 12345 :quantity 1})
+       cart (cart-item-add one-item-cart {:productId 23 :quantity 1})
+       items (cart :items)]
+      (is (= 2 (cart-line-count cart)))
+      (is (true? (contains? items 12345)))
+      (is (true? (contains? items 23)))
+    )))
