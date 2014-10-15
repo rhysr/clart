@@ -27,3 +27,9 @@
               (update-in current-item [:quantity]
                 (fn [quantity] (+ quantity (item :quantity))))))
           (assoc items productId item))))))
+
+
+(defn valid-cart? [cart]
+  (if (not (contains? cart :items))
+    false
+    true))

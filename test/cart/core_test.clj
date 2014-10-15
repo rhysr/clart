@@ -52,3 +52,8 @@
         (let [line-item (items 12345)]
           (is (true? (contains? line-item :quantity)))
           (is (= 4 (line-item :quantity))))))))
+
+(deftest cart-validation
+  (testing "requires :items map"
+    (is (false? (valid-cart? {})))
+    (is (true? (valid-cart? (create-cart))))))
