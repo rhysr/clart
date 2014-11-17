@@ -51,3 +51,15 @@
           (assoc items product-id item))))))
 
 
+(defn cart-items-sum [cart]
+  {:pre [(valid-cart? cart)]}
+  (reduce
+    (fn [properties [_ line-item]]
+      (assoc
+        properties
+        :price-ex-tax
+        (+
+          (properties :price-ex-tax)
+          (* (line-item :quantity) (line-item :price-ex-tax)))))
+    {:price-ex-tax 0.0 :weight-kg 0.0}
+    (cart :items)))

@@ -53,6 +53,25 @@
           (is (true? (contains? line-item :quantity)))
           (is (= 4 (line-item :quantity))))))))
 
+(deftest summing-cart-properties
+  (testing "empty cart"
+    (def cart (create-cart))
+    (def properties (cart-items-sum cart))
+    (is (true? (contains? properties  :price-ex-tax)))
+    (is (= 0.0 (properties :price-ex-tax)))
+    (is (true? (contains? properties  :weight-kg)))
+    (is (= 0.0 (properties :weight-kg))))
+  (testing "populated cart"
+    (def cart (cart-item-add
+                (cart-item-add
+                  (create-cart)
+                  {:product-id 12345 :quantity 2 :price-ex-tax 23.05 :weigh-kg 3.43})
+                {:product-id 3433 :quantity 3 :price-ex-tax 45.34 :weigh-kg 1.21}))
+
+    (def properties (cart-items-sum cart))
+    (is (= 182.12 (properties :price-ex-tax)))
+    ))
+
 (deftest cart-validation
     (is (false? (valid-cart? {})))
     (is (true? (valid-cart? (create-cart)))))
