@@ -21,7 +21,7 @@
   (def cart (create-cart))
   (testing "add item to empty cart"
     (let
-      [item {:product-id 12345 :quantity 1}
+      [item {:product-id 12345 :quantity 1 :weight-kg 2}
        populated-cart (cart-item-add cart item)]
       (is (true? (contains? populated-cart :items)))
       (is (= 1 (cart-line-count populated-cart)))
@@ -32,8 +32,8 @@
 
   (testing "add different items to cart"
     (let
-      [one-item-cart (cart-item-add cart {:product-id 12345 :quantity 1})
-       cart (cart-item-add one-item-cart {:product-id 23 :quantity 1})
+      [one-item-cart (cart-item-add cart {:product-id 12345 :quantity 1 :weight-kg 2})
+       cart (cart-item-add one-item-cart {:product-id 23 :quantity 1 :weight-kg 2})
        items (cart :items)]
       (is (= 2 (cart-line-count cart)))
       (is (true? (contains? items 12345)))
@@ -42,8 +42,8 @@
 
   (testing "add same product to cart sums quantity"
     (let
-      [item-1 {:product-id 12345 :quantity 1}
-       item-2 {:product-id 12345 :quantity 3}
+      [item-1 {:product-id 12345 :quantity 1 :weight-kg 2}
+       item-2 {:product-id 12345 :quantity 3 :weight-kg 2}
        cart (cart-item-add (cart-item-add (create-cart) item-1) item-2)]
       (is (= 1 (cart-line-count cart)))
       (is (true? (contains? cart :items)))
@@ -65,11 +65,12 @@
     (def cart (cart-item-add
                 (cart-item-add
                   (create-cart)
-                  {:product-id 12345 :quantity 2 :price-ex-tax 23.05 :weigh-kg 3.43})
-                {:product-id 3433 :quantity 3 :price-ex-tax 45.34 :weigh-kg 1.21}))
+                  {:product-id 12345 :quantity 2 :price-ex-tax 23.05 :weight-kg 3.43})
+                {:product-id 3433 :quantity 3 :price-ex-tax 45.34 :weight-kg 1.21}))
 
     (def properties (cart-items-sum cart))
     (is (= 182.12 (properties :price-ex-tax)))
+    (is (= 10.49 (properties :weight-kg)))
     ))
 
 (deftest cart-validation
@@ -82,7 +83,7 @@
   (is (false? (valid-line-item? {:product-id -1})))
   (is (false? (valid-line-item? {:product-id -1 :quantity 2})))
   (is (false? (valid-line-item? {:product-id 12345 :quantity -2})))
-  (is (true? (valid-line-item? {:product-id 12345 :quantity 2}))))
+  (is (true? (valid-line-item? {:product-id 12345 :quantity 2 :weight-kg 1.1}))))
 
 
 (deftest product-id-validation
@@ -96,3 +97,9 @@
   (is (false? (valid-quantity? 0)))
   (is (false? (valid-quantity? "number")))
   (is (true? (valid-quantity? 12345))))
+
+(deftest weight-validation
+  (is (false? (valid-weight-kg? -1)))
+  (is (false? (valid-weight-kg? 0)))
+  (is (false? (valid-weight-kg? "number")))
+  (is (true? (valid-weight-kg? 12345))))

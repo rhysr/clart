@@ -19,13 +19,18 @@
 (defn valid-quantity? [quantity]
   (and (integer? quantity) (> quantity 0)))
 
+(defn valid-weight-kg? [weight-kg]
+  (and (or (float? weight-kg) (integer? weight-kg)) (> weight-kg 0)))
+
 
 (defn valid-line-item? [line-item]
   (if (not (and (contains? line-item :product-id) (valid-product-id? (line-item :product-id))))
     false
     (if (not (and (contains? line-item :quantity) (valid-quantity? (line-item :quantity))))
       false
-      true)))
+      (if (not (and (contains? line-item :weight-kg) (valid-weight-kg? (line-item :weight-kg))))
+        false
+        true))))
 
 (defn create-cart []
   {:items {}}
@@ -60,6 +65,11 @@
         :price-ex-tax
         (+
           (properties :price-ex-tax)
-          (* (line-item :quantity) (line-item :price-ex-tax)))))
+          (* (line-item :quantity) (line-item :price-ex-tax)))
+        :weight-kg
+        (+
+          (properties :weight-kg)
+          (* (line-item :quantity) (line-item :weight-kg)))
+        ))
     {:price-ex-tax 0.0 :weight-kg 0.0}
     (cart :items)))
