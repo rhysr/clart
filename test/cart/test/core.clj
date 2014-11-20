@@ -1,7 +1,6 @@
-(ns cart.core-test
+(ns cart.test.core
   (:require [clojure.test :refer :all]
             [cart.core :refer :all]))
-
 
 (deftest creating-cart
   (def cart (create-cart))
