@@ -28,7 +28,7 @@
           [:a {:href "#"} "Home"]]
          [:li [:a {:href "#about"} "About"]]
          [:li [:a {:href "#contact"} "Contact"]]]]]]
-     [:div {:class "container"} body]
+     body
      (include-js
        "https://code.jquery.com/jquery-2.1.1.min.js"
        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js") ] ))
