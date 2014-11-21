@@ -5,7 +5,8 @@
             [hiccup.middleware :refer [wrap-base-url]]
             [compojure.handler :as handler]
             [compojure.route :as route]
-            [cart.routes.home :refer [home-routes]]))
+            [cart.routes.home :refer [home-routes]]
+            [cart.routes.product :refer [product-routes]]))
 
 (defn init []
   (println "cart is starting"))
@@ -18,6 +19,6 @@
   (route/not-found "Not Found"))
 
 (def app
-  (-> (routes home-routes app-routes)
+  (-> (routes home-routes product-routes app-routes)
       (handler/site)
       (wrap-base-url)))
